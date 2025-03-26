@@ -1,0 +1,189 @@
+import { VerticalBox, Button, TextEdit } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    title: "";
+    icon: @image-url("");
+    no-frame: true;
+    background: transparent;
+    resize-border-width: 0;
+    width: 300px;
+    height: 480px;
+    in-out property <string> country;
+    in-out property <string> city;
+    in-out property <string> temperature;
+    in-out property <string> condition;
+    in-out property <string> date;
+    in-out property <string> time;
+    in-out property <image> image;
+    in-out property <color> text-color: #ecf0f1;
+
+    callback mouse_move(length, length);
+    callback close_window();
+    callback reload_window();
+    callback window_minimize();
+
+    TouchArea {
+        Rectangle {
+        }
+        moved => {
+            root.mouse_move(self.mouse-x - self.pressed-x, self.mouse-y - self.pressed-y);
+        }
+    }
+
+    VerticalLayout {
+
+        Rectangle {
+            width: 100%;
+            height: 100%;
+            background: @linear-gradient(180deg, #d1d4d1 0%, #2fa8cc 100%);
+            border-radius: 8px;
+
+            HorizontalLayout {
+                x: parent.width - 65px;
+                y: 5px;
+
+                Rectangle {
+                    width: 20px;
+                    height: 20px;
+                    // background: #C0B070;
+                    Button {
+                        width: 20px;
+                        height: 20px;
+                        clicked => {
+                            root.window-minimize();
+                        }
+                    }
+                    Image {
+                        opacity: 0.5;
+                        width: 21px;
+                        height: 21px;
+                        source: @image-url("icons/green.png");
+                    }
+                }
+
+
+                Rectangle {
+                    width: 20px;
+                    height: 20px;
+                    Button {
+                        width: 20px;
+                        height: 20px;
+                        clicked => {
+                            root.reload_window();
+                        }
+                    }
+                    Image {
+                        opacity: 0.5;
+                        width: 18px;
+                        height: 18px;
+                        source: @image-url("icons/blue.png");
+                    }
+                }
+                Rectangle {
+                    width: 20px;
+                    height: 20px;
+                    Button {
+                        width: 20px;
+                        height: 20px;
+                        clicked => {
+                            root.close_window();
+                        }
+                    }
+                    Image {
+                        opacity: 0.5;
+                        width: 21px;
+                        height: 21px;
+                        source: @image-url("icons/red.png");
+                    }
+                }
+            }
+
+            Text {
+                x: 10px;
+                y: 10px;
+                width: parent.width/2;
+                text: "⚲ " + "USA" + ", " + "New York";
+                font-size: 16px;
+                font-weight: 800;
+                font-family: "Segoe UI";
+                color: text-color;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+
+
+            VerticalLayout {
+                y: 50px;
+                width: 100%;
+                height: 40%;
+                Text {
+                    x: 0;
+                    // y: 70px;
+                    width: parent.width;
+                    font-family: "Segoe UI";
+                    // text: date + "\n" + time;
+                    text: "Wed, 26 Mar 2025\n18:20:42 GMT";
+                    font-size: 18px;
+                    font-weight: 700;
+                    font-italic: true;
+                    color: text-color;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    x: 0;
+                    width: parent.width;
+                    // y: 210px;
+                    font-family: "Segoe UI";
+                    text: "0°C";
+                    font-size: 70px;
+                    font-weight: 800;
+                    color: text-color;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+
+                // Image {
+                //     width: root.width*0.26;
+                //     x: root.width*0.5-parent.width*0.26/2;
+                //     // y: 110px;
+                //     // source: image;
+                //     source: @image-url("icons/sunny.png");
+                // }
+
+                Text {
+                    horizontal-alignment: center;
+                    text: "🏝️";
+                    width: parent.width;
+                    font-size: 80px;
+                }
+
+                Text {
+                    x: 0;
+                    width: parent.width;
+                    // y: 190px;
+                    font-family: "Segoe UI";
+                    text: "Sunny";
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: text-color;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+            }
+
+
+
+            Rectangle {
+                // background: @linear-gradient(180deg, rgba(246, 240, 240, 0.5) 100%, rgba(246, 240, 240, 0.5) 100%);
+                background: rgba(246, 240, 240, 0.3);
+                y: root.height - 78px;
+                width: 280px;
+                height: 70px;
+                border-radius: 8px;
+            }
+
+        }
+    }
+}
