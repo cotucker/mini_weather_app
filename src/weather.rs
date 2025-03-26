@@ -27,7 +27,7 @@ struct Condition {
 }
 
 pub(crate) async fn get_weather() -> Result<WeatherResponse, Error> {
-    let response = match reqwest::get("http://api.weatherapi.com/v1/current.json?key=e756ac9e718447a0ae9133510252303&q=Minsk&aqi=no")
+    let response = match reqwest::get("http://api.weatherapi.com/v1/current.json?key=e756ac9e718447a0ae9133510252303&q=London&aqi=no")
     .await {
         Ok(response) => response,
         Err(_) => panic!("Не удалось получить данные о погоде"),
@@ -62,6 +62,7 @@ pub(crate) fn print_weather(weather: &WeatherResponse) {
     println!("Температура: {}°C", weather.current.temp_c);
     println!("Состояние: {}", weather.current.condition.text);
     println!("Время: {}", weather.location.localtime);
+    println!("Code: {}", weather.current.condition.code)
 }
 
 fn get_error() -> WeatherResponse {
