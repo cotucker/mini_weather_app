@@ -7,9 +7,11 @@ use std::error::Error;
 
 slint::include_modules!();
 
+static API_KEY: &str = "e756ac9e718447a0ae9133510252303";
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let weather_responce = weather::get_weather().await?;
+    let weather_responce = weather::get_weather(API_KEY, "Minsk").await?;
     weather::print_weather(&weather_responce);
 
     let ui = MainWindow::new().unwrap();
@@ -61,7 +63,6 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) 
     ui.set_temperature(weather::get_temp(&weather_responce).into());
     ui.set_date(split_date_time(&weather::get_date(&weather_responce)).0.into());
     ui.set_time(split_date_time(&weather::get_date(&weather_responce)).1.into());
-    ui.set_image(slint::Image::load_from_path(std::path::Path::new("ui/icons/sun.png")).unwrap());
     let color_pallet = config::color_pallet_map();
     let text_color = color_pallet.get(weather::get_code(&weather_responce).as_str()).unwrap().0;
     let first_grad_color = color_pallet.get(weather::get_code(&weather_responce).as_str()).unwrap().1;
@@ -69,6 +70,7 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) 
     ui.set_text_color(get_slint_color(text_color));
     ui.set_first_gradient_color(get_slint_color(first_grad_color));
     ui.set_second_gradient_color(get_slint_color(secont_grad_color));
+    ui.set_image(slint::Image::load_from_path(std::path::Path::new(config::icon_map(weather::get_code(&weather_responce).as_str()))).unwrap());
 }
 
 fn get_color(rgb_color: &'static str) -> (u8, u8, u8) {

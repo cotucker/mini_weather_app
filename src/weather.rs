@@ -26,8 +26,8 @@ struct Condition {
     code: i32,
 }
 
-pub(crate) async fn get_weather() -> Result<WeatherResponse, Error> {
-    let response = match reqwest::get("http://api.weatherapi.com/v1/current.json?key=e756ac9e718447a0ae9133510252303&q=London&aqi=no")
+pub(crate) async fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, Error> {
+    let response = match reqwest::get(format!("http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no", api_key, city))
     .await {
         Ok(response) => response,
         Err(_) => panic!("Не удалось получить данные о погоде"),
