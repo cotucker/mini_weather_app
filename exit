@@ -1,0 +1,37 @@
+[33mcommit b80fb6df65319c49361c68f446ce5f8972a96087[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mmini_weather_app/main[m[33m)[m
+Author: cotucker <klimilya005@gmail.com>
+Date:   Thu Mar 27 21:02:50 2025 +0300
+
+    Finishing icons and color pallet config
+
+[33mcommit 97e6802057bf0b7d2092b4e21108a14a00719b95[m
+Author: cotucker <klimilya005@gmail.com>
+Date:   Thu Mar 27 20:55:49 2025 +0300
+
+    refactor: remove redundant code and debug prints
+    
+    Clean up the code by removing commented-out lines and debug print statements that are no longer needed. This improves code readability and maintainability.
+
+[33mcommit 294a39845b48dd012b8910e2af2d522467d664a4[m
+Author: cotucker <klimilya005@gmail.com>
+Date:   Thu Mar 27 02:21:48 2025 +0300
+
+    feat: add dynamic weather UI colors and refactor config
+    
+    - Introduced dynamic color mapping based on weather condition codes
+    - Refactored `map` function to `color_pallet_map` for clarity
+    - Updated UI to use dynamic colors for text and gradients
+    - Added new weather condition code to the color palette
+
+[33mcommit fe296cedc10e3cfd1694e77ef0402d6c4d4e799d[m
+Author: cotucker <klimilya005@gmail.com>
+Date:   Thu Mar 27 00:24:30 2025 +0300
+
+    feat: add initial project setup with weather app UI and functionality
+    
+    This commit introduces the initial setup for a weather application using the Slint UI framework in Rust. It includes:
+    - UI icons and window design in `ui/app-window.slint`
+    - Weather data fetching and processing in `src/weather.rs`
+    - Configuration mappings in `src/config.rs`
+    - Main application logic in `src/main.rs`
+    - Build configuration in `build.rs`, `Cargo.toml`, and `.gitignore`

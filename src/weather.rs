@@ -18,6 +18,9 @@ struct Location {
 struct Current {
     temp_c: f64,
     condition: Condition,
+    humidity: f64,
+    feelslike_c: f64,
+    wind_kph: f64,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -57,6 +60,17 @@ pub(crate) fn get_date(weather: &WeatherResponse) -> String {
 pub(crate) fn get_code(weather: &WeatherResponse) -> String {
     format!("{}", weather.current.condition.code)
 }
+pub(crate) fn get_humidity(weather: &WeatherResponse) -> String {
+    format!("{}", weather.current.humidity)
+}
+pub(crate) fn get_feels_like(weather: &WeatherResponse) -> String {
+    format!("{}", weather.current.feelslike_c)
+}
+pub(crate) fn get_wind(weather: &WeatherResponse) -> String {
+    format!("{}", weather.current.wind_kph)
+}
+
+
 pub(crate) fn print_weather(weather: &WeatherResponse) {
     println!("Город: {}, {}", weather.location.name, weather.location.country);
     println!("Температура: {}°C", weather.current.temp_c);
@@ -78,6 +92,9 @@ fn get_error() -> WeatherResponse {
             code: 0,
             },
            temp_c: 0.0,
+           humidity: 0.0,
+           feelslike_c: 0.0,
+           wind_kph: 0.0,
         },
     }
 }

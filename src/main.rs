@@ -4,6 +4,7 @@ mod weather;
 mod config;
 
 use std::error::Error;
+use tokio::task;
 
 slint::include_modules!();
 
@@ -11,7 +12,9 @@ static API_KEY: &str = "e756ac9e718447a0ae9133510252303";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let weather_responce = weather::get_weather(API_KEY, "Minsk").await?;
+
+    let weather_responce = weather::get_weather(API_KEY, "Oslo").await?;
+
     weather::print_weather(&weather_responce);
 
     let ui = MainWindow::new().unwrap();
@@ -34,19 +37,24 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let ui_clone = ui.as_weak();
     ui.on_window_minimize(
         move || {
-            let ui_clone = ui_clone.unwrap();
+            let ui_clone = ui_clone.upgrade().unwrap();
             ui_clone.window().set_minimized(true);
         }
     );
     let ui_clone = ui.as_weak();
-    let weather_responce_clone = weather_responce.clone();
-    ui.on_reload_window(
+    ui.on_reload_window (
         move || {
-            set_all_params(&weather_responce_clone, &ui_clone.unwrap());
+            let ui_clone = ui_clone.upgrade();
+            let ui_clone = ui_clone.unwrap();
+            task::spawn_local(async move {
+
+                print!("Reload");
+                update_params(&ui_clone).await;
+
+            });
         }
     );
-    set_all_params(&weather_responce, &ui);
-
+    update_params(&ui).await;
     ui.run()?;
     Ok(())
 }
@@ -56,7 +64,17 @@ fn split_date_time(date_time: &String) -> (String, String) {
     (format!("{} {} {}", vec[0], vec[1], vec[2]), format!("{} {} {}", vec[3], vec[4], vec[5]))
 }
 
+async fn update_params(ui: &MainWindow) {
+    let mut city = String::new();
+    std::io::stdin()
+       .read_line(&mut city)
+       .expect("Failed to read line");
+    let weather_responce = weather::get_weather(API_KEY, city.trim()).await.unwrap();
+    set_all_params(&weather_responce, ui);
+}
+
 fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) {
+
     ui.set_country(weather::get_location(&weather_responce).0.into());
     ui.set_city(weather::get_location(&weather_responce).1.into());
     ui.set_condition(weather::get_condition(&weather_responce).into());
@@ -71,6 +89,9 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) 
     ui.set_first_gradient_color(get_slint_color(first_grad_color));
     ui.set_second_gradient_color(get_slint_color(secont_grad_color));
     ui.set_image(slint::Image::load_from_path(std::path::Path::new(config::icon_map(weather::get_code(&weather_responce).as_str()))).unwrap());
+    ui.set_humidity(weather::get_humidity(&weather_responce).into());
+    ui.set_feels_like_c(weather::get_feels_like(&weather_responce).into());
+    ui.set_wind_kph(weather::get_wind(&weather_responce).into());
 }
 
 fn get_color(rgb_color: &'static str) -> (u8, u8, u8) {
