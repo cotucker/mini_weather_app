@@ -43,16 +43,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
             set_all_params(&weather_responce_clone, &ui_clone.unwrap());
         }
     );
-    // ui.set_country(weather::get_location(&weather_responce).0.into());
-    // ui.set_city(weather::get_location(&weather_responce).1.into());
-    // ui.set_condition(weather::get_condition(&weather_responce).into());
-    // ui.set_temperature(weather::get_temp(&weather_responce).into());
-    // ui.set_date(split_date_time(&weather::get_date(&weather_responce)).0.into());
-    // ui.set_time(split_date_time(&weather::get_date(&weather_responce)).1.into());
-    // let color = (0,0,0);
-    // ui.set_image(slint::Image::load_from_path(std::path::Path::new("ui/icons/sun.png")).unwrap());
-    // ui.set_text_color(slint::Color::from_rgb_u8(color.0, color.1, color.2));
-
     set_all_params(&weather_responce, &ui);
 
     ui.run()?;
@@ -76,9 +66,6 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) 
     let text_color = color_pallet.get(weather::get_code(&weather_responce).as_str()).unwrap().0;
     let first_grad_color = color_pallet.get(weather::get_code(&weather_responce).as_str()).unwrap().1;
     let secont_grad_color = color_pallet.get(weather::get_code(&weather_responce).as_str()).unwrap().2;
-    println!("{}", text_color);
-    println!("{}", first_grad_color);
-    println!("{}", secont_grad_color);
     ui.set_text_color(get_slint_color(text_color));
     ui.set_first_gradient_color(get_slint_color(first_grad_color));
     ui.set_second_gradient_color(get_slint_color(secont_grad_color));
