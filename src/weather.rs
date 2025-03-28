@@ -25,7 +25,7 @@ struct Current {
 }
 
 #[derive(Debug, Deserialize, Clone)]
-struct Condition {
+pub(crate) struct Condition {
     text: String,
     code: i32,
 }
@@ -41,7 +41,6 @@ pub(crate) fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, 
         Ok(response) => response,
         Err(_) => get_error(),
     };
-    println!("{:?}", header);
     response.location.localtime = String::from(header.get("date").unwrap().to_str().unwrap());
     Ok(response)
 }

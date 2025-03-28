@@ -2,20 +2,18 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 mod weather;
 mod config;
+mod forecast;
 
 use std::error::Error;
-// use tokio::task;
 
 slint::include_modules!();
 
 static API_KEY: &str = "e756ac9e718447a0ae9133510252303";
 
-// #[tokio::main]
 fn main() -> Result<(), Box<dyn Error>> {
 
     let weather_responce = weather::get_weather(API_KEY, "Oslo")?;
-
-    weather::print_weather(&weather_responce);
+    let forecast_responce = forecast::get_forecast(API_KEY, "Oslo")?;
 
     let ui = MainWindow::new().unwrap();
 
