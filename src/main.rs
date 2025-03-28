@@ -5,7 +5,7 @@ mod config;
 mod forecast;
 
 use std::error::Error;
-use slint::{VecModel};
+use slint::VecModel;
 use std::rc::Rc;
 
 slint::include_modules!();
