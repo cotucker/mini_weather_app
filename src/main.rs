@@ -58,7 +58,7 @@ fn split_date_time(date_time: &String) -> (String, String) {
 }
 
 fn get_time_from_date_time(date_time: &String) -> String {
-    let vec: Vec<&str> = date_gtime.split(' ').collect();
+    let vec: Vec<&str> = date_time.split(' ').collect();
     format!("{}", vec[1])
 }
 
