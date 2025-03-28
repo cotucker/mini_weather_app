@@ -4,16 +4,16 @@ mod weather;
 mod config;
 
 use std::error::Error;
-use tokio::task;
+// use tokio::task;
 
 slint::include_modules!();
 
 static API_KEY: &str = "e756ac9e718447a0ae9133510252303";
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+// #[tokio::main]
+fn main() -> Result<(), Box<dyn Error>> {
 
-    let weather_responce = weather::get_weather(API_KEY, "Oslo").await?;
+    let weather_responce = weather::get_weather(API_KEY, "Oslo")?;
 
     weather::print_weather(&weather_responce);
 
@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let ui_clone = ui.as_weak();
     ui.on_mouse_move(
             move |delta_x, delta_y| {
-            let ui_clone = ui_clone.unwrap();
+            let ui_clone = ui_clone.upgrade().unwrap();
             let logical_pos = ui_clone.window().position().to_logical(ui_clone.window().scale_factor());
             ui_clone.window().set_position(slint::LogicalPosition::new(logical_pos.x + delta_x, logical_pos.y + delta_y));
         }
@@ -44,17 +44,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let ui_clone = ui.as_weak();
     ui.on_reload_window (
         move || {
-            let ui_clone = ui_clone.upgrade();
-            let ui_clone = ui_clone.unwrap();
-            task::spawn_local(async move {
-
-                print!("Reload");
-                update_params(&ui_clone).await;
-
-            });
+            let ui_clone = ui_clone.upgrade().unwrap();
+            update_params(&ui_clone);
         }
     );
-    update_params(&ui).await;
+    update_params(&ui);
     ui.run()?;
     Ok(())
 }
@@ -64,12 +58,12 @@ fn split_date_time(date_time: &String) -> (String, String) {
     (format!("{} {} {}", vec[0], vec[1], vec[2]), format!("{} {} {}", vec[3], vec[4], vec[5]))
 }
 
-async fn update_params(ui: &MainWindow) {
+fn update_params(ui: &MainWindow) {
     let mut city = String::new();
     std::io::stdin()
        .read_line(&mut city)
        .expect("Failed to read line");
-    let weather_responce = weather::get_weather(API_KEY, city.trim()).await.unwrap();
+    let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
     set_all_params(&weather_responce, ui);
 }
 

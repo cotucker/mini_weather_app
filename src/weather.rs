@@ -1,4 +1,5 @@
 use reqwest::Error;
+use reqwest;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -29,14 +30,14 @@ struct Condition {
     code: i32,
 }
 
-pub(crate) async fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, Error> {
-    let response = match reqwest::get(format!("http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no", api_key, city))
-    .await {
+pub(crate) fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, Error> {
+
+    let response = match reqwest::blocking::get(format!("http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no", api_key, city)) {
         Ok(response) => response,
         Err(_) => panic!("Не удалось получить данные о погоде"),
     };
     let header = &response.headers().clone();
-    let mut response = match response.json::<WeatherResponse>().await{
+    let mut response = match response.json::<WeatherResponse>(){
         Ok(response) => response,
         Err(_) => get_error(),
     };
