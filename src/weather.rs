@@ -30,7 +30,7 @@ pub(crate) struct Condition {
     code: i32,
 }
 
-pub(crate) fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, Error> {
+pub fn get_weather(api_key: &str, city: &str) -> Result<WeatherResponse, Error> {
 
     let response = match reqwest::blocking::get(format!("http://api.weatherapi.com/v1/current.json?key={}&q={}&aqi=no", api_key, city)) {
         Ok(response) => response,

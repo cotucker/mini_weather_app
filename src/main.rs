@@ -8,12 +8,11 @@ use std::error::Error;
 
 slint::include_modules!();
 
+
 static API_KEY: &str = "e756ac9e718447a0ae9133510252303";
 
-fn main() -> Result<(), Box<dyn Error>> {
 
-    let weather_responce = weather::get_weather(API_KEY, "Oslo")?;
-    let forecast_responce = forecast::get_forecast(API_KEY, "Oslo")?;
+fn main() -> Result<(), Box<dyn Error>> {
 
     let ui = MainWindow::new().unwrap();
 
@@ -62,10 +61,11 @@ fn update_params(ui: &MainWindow) {
        .read_line(&mut city)
        .expect("Failed to read line");
     let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
-    set_all_params(&weather_responce, ui);
+    let forecast_responce = forecast::get_forecast(API_KEY, city.trim()).unwrap();
+    set_all_params(&weather_responce, &forecast_responce, ui);
 }
 
-fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) {
+fn set_all_params(weather_responce: &weather::WeatherResponse, forecast_response: &forecast::ForecastResponse, ui: &MainWindow) {
 
     ui.set_country(weather::get_location(&weather_responce).0.into());
     ui.set_city(weather::get_location(&weather_responce).1.into());
@@ -84,6 +84,20 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, ui: &MainWindow) 
     ui.set_humidity(weather::get_humidity(&weather_responce).into());
     ui.set_feels_like_c(weather::get_feels_like(&weather_responce).into());
     ui.set_wind_kph(weather::get_wind(&weather_responce).into());
+    let weather_for_time = forecast::get_weather_for_time(forecast_response);
+
+    let slint_data_items: Vec<WeatherForTime> = weather_for_time
+        .into_iter()
+        .map(|(s1, s2, s3)| WeatherForTime {
+           temperature: s1.into(),
+           time: s3.into(),
+           time_condition_icon: slint::Image::load_from_path(std::path::Path::new(config::icon_map(s2.as_str()))).unwrap().into(),
+        })
+        .collect();
+    ui.set_weather_for_time0(slint_data_items[0].clone());
+    ui.set_weather_for_time1(slint_data_items[1].clone());
+    ui.set_weather_for_time2(slint_data_items[2].clone());
+
 }
 
 fn get_color(rgb_color: &'static str) -> (u8, u8, u8) {
