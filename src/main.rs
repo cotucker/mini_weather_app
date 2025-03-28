@@ -5,6 +5,8 @@ mod config;
 mod forecast;
 
 use std::error::Error;
+use slint::{VecModel};
+use std::rc::Rc;
 
 slint::include_modules!();
 
@@ -55,6 +57,11 @@ fn split_date_time(date_time: &String) -> (String, String) {
     (format!("{} {} {}", vec[0], vec[1], vec[2]), format!("{} {} {}", vec[3], vec[4], vec[5]))
 }
 
+fn get_time_from_date_time(date_time: &String) -> String {
+    let vec: Vec<&str> = date_gtime.split(' ').collect();
+    format!("{}", vec[1])
+}
+
 fn update_params(ui: &MainWindow) {
     let mut city = String::new();
     std::io::stdin()
@@ -84,19 +91,20 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, forecast_response
     ui.set_humidity(weather::get_humidity(&weather_responce).into());
     ui.set_feels_like_c(weather::get_feels_like(&weather_responce).into());
     ui.set_wind_kph(weather::get_wind(&weather_responce).into());
+
+
     let weather_for_time = forecast::get_weather_for_time(forecast_response);
 
     let slint_data_items: Vec<WeatherForTime> = weather_for_time
         .into_iter()
         .map(|(s1, s2, s3)| WeatherForTime {
-           temperature: s1.into(),
-           time: s3.into(),
+           temperature: s3.into(),
+           time: get_time_from_date_time(&s1).into(),
            time_condition_icon: slint::Image::load_from_path(std::path::Path::new(config::icon_map(s2.as_str()))).unwrap().into(),
         })
         .collect();
-    ui.set_weather_for_time0(slint_data_items[0].clone());
-    ui.set_weather_for_time1(slint_data_items[1].clone());
-    ui.set_weather_for_time2(slint_data_items[2].clone());
+    let new_model = Rc::new(VecModel::from(slint_data_items));
+    ui.set_my_vector_data(new_model.into());
 
 }
 

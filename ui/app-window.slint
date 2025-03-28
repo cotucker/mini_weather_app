@@ -1,5 +1,4 @@
-import { VerticalBox, Button, TextEdit } from "std-widgets.slint";
-
+import { VerticalBox, Button, TextEdit, ScrollView} from "std-widgets.slint";
 
 struct WeatherForTime {
     time: string,
@@ -29,19 +28,14 @@ export component MainWindow inherits Window {
     in property <string> wind_kph;
     in property <string> feels_like_c;
 
-    in property <WeatherForTime> weather_for_time0;
-    in property <WeatherForTime> weather_for_time1;
-    in property <WeatherForTime> weather_for_time2;
     in property <[WeatherForTime]> my_vector_data: [];
-
-
-
-
 
     callback mouse_move(length, length);
     callback close_window();
     callback reload_window  ;
     callback window_minimize();
+
+
 
     TouchArea {
         Rectangle {
@@ -242,6 +236,39 @@ export component MainWindow inherits Window {
                 width: 280px;
                 height: 70px;
                 border-radius: 8px;
+
+                HorizontalLayout {
+                    padding: 10px;
+                    spacing: 10px;
+                    width: 100%;
+                    height: 100px;
+                    y: parent.height -75px;
+                    for model[index] in my_vector_data : HorizontalLayout {
+                        spacing: -25px;
+
+                        Image {
+                            source: model.time_condition_icon;
+                            width: 60px;
+                            height: 60px;
+                        }
+                        Rectangle {
+                            y: parent.height - 67px;
+                            width: 46px;
+                            height: 46px;
+                            border-radius: 8px;
+                            background: first_gradient_color.with-alpha(0.6);
+                            Text {
+                                text: model.time + "\n" + model.temperature + "°C";
+                                font-family: "Segoe UI";
+                                color: text-color;
+                                font-weight: 700;
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+
+
             }
         }
     }

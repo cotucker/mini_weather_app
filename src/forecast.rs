@@ -34,7 +34,6 @@ pub(crate) struct Condition {
 
 pub(crate) fn get_forecast(api_key: &str, city: &str) -> Result<ForecastResponse, Error> {
 
-    println!("sdasdas");
     let response = match reqwest::blocking::get(format!("http://api.weatherapi.com/v1/forecast.json?key={}&q={}&days=2&aqi=no&alerts=no", api_key, city)) {
         Ok(response) => response,
         Err(_) => panic!("Не удалось получить данные о погоде"),
@@ -43,7 +42,7 @@ pub(crate) fn get_forecast(api_key: &str, city: &str) -> Result<ForecastResponse
         Ok(response) => response,
         Err(_) => get_error(),
     };
-    println!("{:?}", response);
+    // println!("{:?}", response);
     Ok(response)
 }
 
@@ -59,9 +58,9 @@ fn get_error() -> ForecastResponse {
 pub(crate) fn get_weather_for_time(forecast: &ForecastResponse) -> Vec<(String, String, String)> {
     if forecast.forecast.forecastday.is_empty() {
         return vec![
-        ("Err".to_string(), "Err".to_string(), "Err".to_string()),
-        ("Err".to_string(), "Err".to_string(), "Err".to_string()),
-        ("Err".to_string(), "Err".to_string(), "Err".to_string())
+        ("Err Err".to_string(), "Err".to_string(), "Err".to_string()),
+        ("Err Err".to_string(), "Err".to_string(), "Err".to_string()),
+        ("Err Err".to_string(), "Err".to_string(), "Err".to_string())
         ];
     }
     let forecast_vec = forecast.forecast.forecastday[1].hour.clone();
@@ -70,7 +69,7 @@ pub(crate) fn get_weather_for_time(forecast: &ForecastResponse) -> Vec<(String, 
     test.push((forecast_vec[0].time.clone(), forecast_vec[0].condition.code.to_string(), forecast_vec[0].temp_c.to_string()));
     test.push((forecast_vec[time_stamp_lenth/2].time.clone(), forecast_vec[time_stamp_lenth/2].condition.code.to_string(), forecast_vec[time_stamp_lenth/2].temp_c.to_string()));
     test.push((forecast_vec[time_stamp_lenth - 1].time.clone(), forecast_vec[time_stamp_lenth - 1].condition.code.to_string(), forecast_vec[time_stamp_lenth - 1].temp_c.to_string()));
-    println!("{:?}", test);
-    println!("{}", test.len());
+    // println!("{:?}", test);
+    // println!("{}", test.len());
     test
 }

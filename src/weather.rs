@@ -71,13 +71,13 @@ pub(crate) fn get_wind(weather: &WeatherResponse) -> String {
 }
 
 
-pub(crate) fn print_weather(weather: &WeatherResponse) {
-    println!("Город: {}, {}", weather.location.name, weather.location.country);
-    println!("Температура: {}°C", weather.current.temp_c);
-    println!("Состояние: {}", weather.current.condition.text);
-    println!("Время: {}", weather.location.localtime);
-    println!("Code: {}", weather.current.condition.code)
-}
+// pub(crate) fn print_weather(weather: &WeatherResponse) {
+//     println!("Город: {}, {}", weather.location.name, weather.location.country);
+//     println!("Температура: {}°C", weather.current.temp_c);
+//     println!("Состояние: {}", weather.current.condition.text);
+//     println!("Время: {}", weather.location.localtime);
+//     println!("Code: {}", weather.current.condition.code)
+// }
 
 fn get_error() -> WeatherResponse {
     WeatherResponse {
