@@ -1,4 +1,4 @@
-import { VerticalBox, Button, TextEdit, ScrollView} from "std-widgets.slint";
+import { VerticalBox, Button, TextEdit, ScrollView, TextEdit} from "std-widgets.slint";
 
 struct WeatherForTime {
     time: string,
@@ -21,6 +21,7 @@ export component MainWindow inherits Window {
     in-out property <string> date;
     in-out property <string> time;
     in-out property <image> image;
+    in-out property <string> text_input_placeholder;
     in-out property <color> text-color;
     in-out property <color> first_gradient_color;
     in-out property <color> second_gradient_color;
@@ -32,11 +33,15 @@ export component MainWindow inherits Window {
 
     callback mouse_move(length, length);
     callback close_window();
-    callback reload_window  ;
+    callback reload_window;
     callback window_minimize();
     callback city_submitted(string);
     callback set_inputtext_text(string);
-
+    function test() -> string{
+        city_input.text = "";
+        city_input.clear-focus();
+        return "allgood";
+    }
 
     TouchArea {
         clicked => {
@@ -116,11 +121,11 @@ export component MainWindow inherits Window {
                 }
             }
 
-            Text {
+            city_text := Text {
                 x: 10px;
                 y: 10px;
                 width: parent.width/2;
-                text: "⚲ " + country + ", " + city;
+                // text: "⚲ " + country + ", " + city;
                 font-size: 16px;
                 font-weight: 800;
                 font-family: "Segoe UI";
@@ -132,24 +137,71 @@ export component MainWindow inherits Window {
                 city_input := TextInput {
                     x: 10px;
                     y: 10px;
-                    width: parent.width / 2 - 20px;
+                    width: parent.width / 2;
                     height: 40px;
-                    // text: "⚲ " + country + ", " + city;
                     in-out property <string> name : city_input.text;
+                    // text: "⚲ " + country + ", " + city;
                     font-size: 16px;
+                    font-weight: 800;
                     font-family: "Segoe UI";
-                    horizontal-alignment: left;
-                    if(city_input.has-focus == true): Rectangle{
-                        height: 40px;
+                    color: text-color;
+                    wrap: word-wrap;
+                    horizontal-alignment: center;
+                    accessible-placeholder-text: "asdasdasd";
+
+
+                    if(city_input.has-focus == true): Rectangle {
+
+                        height: 20px;
+                        x: 5px;
                         y: 5px;
                         background: rgba(255, 255, 255, 0.2);
+                        Text {
+                            text: "";
+                            font-size: 16px;
+                            font-weight: 800;
+                        }
                     }
-                    text: city_input.has-focus ? "⚲ " + country + ", " + city : city;
+                    if(city_input.has-focus == false): Rectangle {
+                        height: 20px;
+                        x: 5px;
+                        y: 5px;
+                        background: transparent;
+
+                        Text {
+                            text: "⚲ " + country + ", " + city;
+                            font-size: 16px;
+                            font-weight: 800;
+                        }
+
+                        // city_text.text = "⚲ " + country + ", " + city;
+
+                    }
+
+                    // text: city_input.has-focus == true ? "" : "⚲ " + country + ", " + city;
+
+
                     accepted() => {
+                        city_input.clear-focus();
                         root.city_submitted(name);
+                        test();
                     }
+
                 }
 
+            // input_field := TouchArea {
+            //         x: 10px;
+            //         y: 10px;
+            //         width: parent.width / 2;
+            //         height: 40px;
+            //     city_input := TextInput {
+            //         read-only: true;
+            //     }
+            //     clicked => {
+            //         city_input.focus();
+            //         city_input.read-only = false;
+            //     }
+            // }
 
 
 
