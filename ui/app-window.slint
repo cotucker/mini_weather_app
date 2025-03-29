@@ -67,69 +67,65 @@ export component MainWindow inherits Window {
                 x: parent.width - 65px;
                 y: 5px;
 
-                Rectangle {
-                    width: 20px;
-                    height: 20px;
+                Image {
+                    width: 21px;
+                    height: 21px;
+                    source: @image-url("icons/green.png");
                     Button {
-                        width: 20px;
-                        height: 20px;
+                        width: 16px;
+                        height: 16px;
                         clicked => {
-                            root.window-minimize();
+                            root.window_minimize();
                         }
-                    }
-                    Image {
-                        opacity: 0.5;
-                        width: 21px;
-                        height: 21px;
-                        source: @image-url("icons/green.png");
                     }
                 }
 
 
-                Rectangle {
-
-                    width: 20px;
-                    height: 20px;
+                Image {
+                    width: 21px;
+                    height: 21px;
+                    source: @image-url("icons/blue.png");
                     Button {
-                        width: 20px;
-                        height: 20px;
+                        width: 16px;
+                        height: 16px;
                         clicked => {
                             root.reload_window();
                         }
                     }
-                    Image {
-                        opacity: 0.5;
-                        width: 18px;
-                        height: 18px;
-                        source: @image-url("icons/blue.png");
-                    }
                 }
-                Rectangle {
-                    width: 20px;
-                    height: 20px;
+
+                Image {
+                    width: 21px;
+                    height: 21px;
+                    source: @image-url("icons/red.png");
                     Button {
-                        width: 20px;
-                        height: 20px;
+                        width: 16px;
+                        height: 16px;
                         clicked => {
                             root.close_window();
                         }
                     }
-                    Image {
-                        opacity: 0.5;
-                        width: 21px;
-                        height: 21px;
-                        source: @image-url("icons/red.png");
-                    }
                 }
             }
 
+
+
+
+            Image {
+                x: 10px;
+                y: 10px;
+                width: 16px;
+                height: 16px;
+                source: @image-url("icons/marker.svg");
+
+            }
+
                 city_input := TextInput {
-                    x: 10px;
-                    y: 10px;
+                    x: 30px;
+                    y: 9px;
                     width: parent.width * 0.7;
                     height: 40px;
                     in-out property <string> name : city_input.text;
-                    // text: "⚲ " + country + ", " + city;
                     font-size: 16px;
                     font-weight: 800;
                     font-family: "Segoe UI";
@@ -140,23 +136,17 @@ export component MainWindow inherits Window {
 
                     if(city_input.has-focus == true): Rectangle {
 
-                        height: 20px;
-                        x: 0px;
-                        y: 0px;
-                        background: transparent;
                     }
                     if(city_input.has-focus == false): Rectangle {
                         height: 20px;
                         x: 0px;
                         y: 0px;
-                        border-radius: 8px;
-                        border-color: second_gradient_color;
-                        border-width: 2px;
+                        background: first_gradient_color;
                         Text {
                             x: 0px;
                             y: 0px;
                             width: root.width * 0.7;
-                            text: "⚲ " + country + ", " + city;
+                            text: country + ", " + city;
                             font-size: 16px;
                             font-weight: 800;
                             font-family: "Segoe UI";
@@ -174,22 +164,6 @@ export component MainWindow inherits Window {
                     }
 
                 }
-
-            // input_field := TouchArea {
-            //         x: 10px;
-            //         y: 10px;
-            //         width: parent.width / 2;
-            //         height: 40px;
-            //     city_input := TextInput {
-            //         read-only: true;
-            //     }
-            //     clicked => {
-            //         city_input.focus();
-            //         city_input.read-only = false;
-            //     }
-            // }
-
-
 
             VerticalLayout {
                 y: 70px;
@@ -254,6 +228,7 @@ export component MainWindow inherits Window {
                         width: size;
                         height: size;
                         source: @image-url("icons/raindrops.png");
+
                         Text {
                             horizontal-alignment: center;
                             y: text_y;

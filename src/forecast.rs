@@ -58,9 +58,9 @@ fn get_error() -> ForecastResponse {
 pub(crate) fn get_weather_for_time(forecast: &ForecastResponse) -> Vec<(String, String, String)> {
     if forecast.forecast.forecastday.is_empty() {
         return vec![
-        ("Err Err".to_string(), "Err".to_string(), "Err".to_string()),
-        ("Err Err".to_string(), "Err".to_string(), "Err".to_string()),
-        ("Err Err".to_string(), "Err".to_string(), "Err".to_string())
+        ("Err Err".to_string(), "0".to_string(), "Err".to_string()),
+        ("Err Err".to_string(), "0".to_string(), "Err".to_string()),
+        ("Err Err".to_string(), "0".to_string(), "Err".to_string())
         ];
     }
     let forecast_vec = forecast.forecast.forecastday[1].hour.clone();
