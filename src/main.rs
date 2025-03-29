@@ -47,9 +47,23 @@ fn main() -> Result<(), Box<dyn Error>> {
             update_params(&ui_clone);
         }
     );
+    let ui_clone = ui.as_weak();
+    ui.on_city_submitted(
+        move |city| {
+            let ui_clone = ui_clone.upgrade().unwrap();
+            println!("In submite callback: {}", city);
+            set_new_city(&ui_clone, &city.as_str());
+        }
+    );
     update_params(&ui);
     ui.run()?;
     Ok(())
+}
+
+fn set_new_city(ui: &MainWindow, city: &str) {
+    let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
+    let forecast_responce = forecast::get_forecast(API_KEY, city.trim()).unwrap();
+    set_all_params(&weather_responce, &forecast_responce, ui);
 }
 
 fn split_date_time(date_time: &String) -> (String, String) {
@@ -94,7 +108,7 @@ fn set_all_params(weather_responce: &weather::WeatherResponse, forecast_response
 
 
     let weather_for_time = forecast::get_weather_for_time(forecast_response);
-
+// TODO: add more farecast items
     let slint_data_items: Vec<WeatherForTime> = weather_for_time
         .into_iter()
         .map(|(s1, s2, s3)| WeatherForTime {
