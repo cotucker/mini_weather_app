@@ -35,19 +35,20 @@ export component MainWindow inherits Window {
     callback reload_window  ;
     callback window_minimize();
     callback city_submitted(string);
-
+    callback set_inputtext_text(string);
 
 
     TouchArea {
-        Rectangle {
+        clicked => {
+            city_input.clear-focus();
         }
         moved => {
             root.mouse_move(self.mouse-x - self.pressed-x, self.mouse-y - self.pressed-y);
         }
     }
 
-    VerticalLayout {
 
+    VerticalLayout {
         Rectangle {
             width: 100%;
             height: 100%;
@@ -128,27 +129,28 @@ export component MainWindow inherits Window {
                 wrap: word-wrap;
             }
 
-
-            city_input := TextInput {
-                x: 10px;
-                y: 10px;
-                width: parent.width / 2 - 20px; // Немного уменьшим ширину для отступов
-                text: "⚲ " + country + ", " + city; // Начальное значение пустое
-                property <string> name : city_input.text;
-                font-size: 16px;
-                font-family: "Segoe UI";
-                horizontal-alignment: left; // Обычно ввод выравнивают по левому краю
-
-                // --- Обработчик нажатия Enter ---
-                accepted() => {
-                    // Вызываем callback корневого элемента (MyWindow)
-                    // и передаем ему текст из этого TextInput
-                    root.city_submitted(name);
-
-                    // Опционально: Очистить поле ввода после отправки
-                    // self.text = "";
+                city_input := TextInput {
+                    x: 10px;
+                    y: 10px;
+                    width: parent.width / 2 - 20px;
+                    height: 40px;
+                    // text: "⚲ " + country + ", " + city;
+                    in-out property <string> name : city_input.text;
+                    font-size: 16px;
+                    font-family: "Segoe UI";
+                    horizontal-alignment: left;
+                    if(city_input.has-focus == true): Rectangle{
+                        height: 40px;
+                        y: 5px;
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                    text: city_input.has-focus ? "⚲ " + country + ", " + city : city;
+                    accepted() => {
+                        root.city_submitted(name);
+                    }
                 }
-            }
+
+
 
 
             VerticalLayout {
