@@ -37,6 +37,8 @@ export component MainWindow inherits Window {
     callback window_minimize();
     callback city_submitted(string);
     callback set_inputtext_text(string);
+
+
     function test() -> string{
         city_input.text = "";
         city_input.clear-focus();
@@ -121,23 +123,10 @@ export component MainWindow inherits Window {
                 }
             }
 
-            city_text := Text {
-                x: 10px;
-                y: 10px;
-                width: parent.width/2;
-                // text: "⚲ " + country + ", " + city;
-                font-size: 16px;
-                font-weight: 800;
-                font-family: "Segoe UI";
-                color: text-color;
-                horizontal-alignment: center;
-                wrap: word-wrap;
-            }
-
                 city_input := TextInput {
                     x: 10px;
                     y: 10px;
-                    width: parent.width / 2;
+                    width: parent.width * 0.7;
                     height: 40px;
                     in-out property <string> name : city_input.text;
                     // text: "⚲ " + country + ", " + city;
@@ -146,39 +135,36 @@ export component MainWindow inherits Window {
                     font-family: "Segoe UI";
                     color: text-color;
                     wrap: word-wrap;
-                    horizontal-alignment: center;
-                    accessible-placeholder-text: "asdasdasd";
+                    horizontal-alignment: left;
 
 
                     if(city_input.has-focus == true): Rectangle {
 
                         height: 20px;
-                        x: 5px;
-                        y: 5px;
-                        background: rgba(255, 255, 255, 0.2);
-                        Text {
-                            text: "";
-                            font-size: 16px;
-                            font-weight: 800;
-                        }
+                        x: 0px;
+                        y: 0px;
+                        background: transparent;
                     }
                     if(city_input.has-focus == false): Rectangle {
                         height: 20px;
-                        x: 5px;
-                        y: 5px;
-                        background: transparent;
-
+                        x: 0px;
+                        y: 0px;
+                        border-radius: 8px;
+                        border-color: second_gradient_color;
+                        border-width: 2px;
                         Text {
+                            x: 0px;
+                            y: 0px;
+                            width: root.width * 0.7;
                             text: "⚲ " + country + ", " + city;
                             font-size: 16px;
                             font-weight: 800;
+                            font-family: "Segoe UI";
+                            color: text-color;
+                            horizontal-alignment: left;
+                            wrap: word-wrap;
                         }
-
-                        // city_text.text = "⚲ " + country + ", " + city;
-
                     }
-
-                    // text: city_input.has-focus == true ? "" : "⚲ " + country + ", " + city;
 
 
                     accepted() => {
