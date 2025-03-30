@@ -3,6 +3,7 @@
 mod weather;
 mod config;
 mod forecast;
+mod geolocation;
 
 use std::error::Error;
 use slint::VecModel;
@@ -77,12 +78,13 @@ fn get_time_from_date_time(date_time: &String) -> String {
 }
 
 fn update_params(ui: &MainWindow) {
-    let mut city = String::new();
-    std::io::stdin()
-       .read_line(&mut city)
-       .expect("Failed to read line");
-    let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
-    let forecast_responce = forecast::get_forecast(API_KEY, city.trim()).unwrap();
+    // let mut city = String::new();
+    // std::io::stdin()
+    //    .read_line(&mut city)
+    //    .expect("Failed to read line");
+    let city = geolocation::get_location().unwrap();
+    let weather_responce = weather::get_weather(API_KEY, city.as_str()).unwrap();
+    let forecast_responce = forecast::get_forecast(API_KEY, city.as_str()).unwrap();
     set_all_params(&weather_responce, &forecast_responce, ui);
 }
 

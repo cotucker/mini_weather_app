@@ -6,9 +6,25 @@ struct WeatherForTime {
     temperature: string
 }
 
+
+component CustomButton inherits Rectangle {
+    in-out property <color> buton_color;
+    callback clicked <=> touch.clicked;
+    width: 18px;
+    height: 18px;
+    border-radius: root.height / 2;
+    border-color: buton_color.darker(0.8);
+    border-width: 1.4px;
+    background: buton_color;
+    padding: 0px;
+    touch := TouchArea {
+        mouse-cursor: pointer;
+    }
+}
+
 export component MainWindow inherits Window {
-    title: "";
-    icon: @image-url("");
+    title: "Weatherly";
+    icon: @image-url("icons/rainbow.png");
     no-frame: true;
     background: transparent;
     resize-border-width: 0;
@@ -23,7 +39,7 @@ export component MainWindow inherits Window {
     in-out property <image> image;
     in-out property <string> text_input_placeholder;
     in-out property <color> text-color;
-    in-out property <color> first_gradient_color;
+    in-out property <color> first_gradient_color: red;
     in-out property <color> second_gradient_color;
     in property <string> humidity;
     in property <string> wind_kph;
@@ -64,66 +80,44 @@ export component MainWindow inherits Window {
             border-radius: 8px;
 
             HorizontalLayout {
-                x: parent.width - 65px;
-                y: 5px;
+                x: parent.width - 78px;
+                y: 7px;
+                spacing: 8px;
 
-                Image {
-                    width: 21px;
-                    height: 21px;
-                    source: @image-url("icons/green.png");
-                    Button {
-                        width: 16px;
-                        height: 16px;
-                        clicked => {
-                            root.window_minimize();
-                        }
+                CustomButton {
+                    buton_color: rgba(41, 207, 66, 1);
+                    clicked => {
+                        root.reload_window();
                     }
                 }
-
-
-                Image {
-                    width: 21px;
-                    height: 21px;
-                    source: @image-url("icons/blue.png");
-                    Button {
-                        width: 16px;
-                        height: 16px;
-                        clicked => {
-                            root.reload_window();
-                        }
+                CustomButton {
+                    buton_color: rgba(255, 190, 47, 1);
+                    clicked => {
+                        root.window_minimize();
                     }
                 }
-
-                Image {
-                    width: 21px;
-                    height: 21px;
-                    source: @image-url("icons/red.png");
-                    Button {
-                        width: 16px;
-                        height: 16px;
-                        clicked => {
-                            root.close_window();
-                        }
+                CustomButton {
+                    buton_color: rgba(255, 98, 89, 1);
+                    clicked => {
+                        root.close_window();
                     }
                 }
             }
 
-
-
-
-            Image {
-                x: 10px;
+            Text {
+                text: "🌍";
+                x: 5px;
                 y: 10px;
-                width: 16px;
-                height: 16px;
-                source: @image-url("icons/marker.svg");
-
+                font-size: 16px;
+                font-weight: 700;
+                font-family: "Segoe UI";
+                color: text-color;
             }
 
                 city_input := TextInput {
                     x: 30px;
-                    y: 9px;
-                    width: parent.width * 0.7;
+                    y: 5px;
+                    width: parent.width * 0.6;
                     height: 40px;
                     in-out property <string> name : city_input.text;
                     font-size: 16px;
@@ -145,7 +139,7 @@ export component MainWindow inherits Window {
                         Text {
                             x: 0px;
                             y: 0px;
-                            width: root.width * 0.7;
+                            width: root.width * 0.6;
                             text: country + ", " + city;
                             font-size: 16px;
                             font-weight: 800;
