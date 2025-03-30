@@ -109,7 +109,7 @@ export component MainWindow inherits Window {
                 border-radius: 8px;
                 x: 5px;
                 y: 5px;
-                border-color: city_input.has-focus ? rgba(255, 255, 255, 0.4) : rgba(255, 255, 255, 0);
+                border-color: city_input.has-focus ? second_gradient_color.with-alpha(0.8) : second_gradient_color.with-alpha(0.5);
                 border-width: 1px;
                 background: rgba(255, 255, 255, 0.15);
             }
@@ -127,12 +127,12 @@ export component MainWindow inherits Window {
 
                 city_input := TextInput {
                     x: 35px;
-                    y: 5px;
+                    y: 6px;
                     width: parent.width * 0.6;
                     height: 22px;
                     in-out property <string> name : city_input.text;
-                    font-size: 16px;
-                    font-weight: 800;
+                    font-size: 14px;
+                    font-weight: 600;
                     font-family: "Segoe UI";
                     color: text-color;
                     wrap: word-wrap;
@@ -145,12 +145,8 @@ export component MainWindow inherits Window {
 
                 }
 
-            VerticalLayout {
-                y: 70px;
-                width: 100%;
-                height: 40%;
-
                 Text {
+                    y: 50px;
                     // x: parent.width * 0.15;
                     width: parent.width;
                     font-family: "Segoe UI";
@@ -162,11 +158,28 @@ export component MainWindow inherits Window {
                     wrap: word-wrap;
                 }
 
+            VerticalLayout {
+                y: 120px;
+                width: 100%;
+                height: 40%;
 
                 Text {
                     width: parent.width;
                     font-family: "Segoe UI";
-                    text: date + "\n" + time;
+                    // text: date + "\n" + time;
+                    text: date;
+                    font-size: 18px;
+                    font-weight: 700;
+                    font-italic: true;
+                    color: text-color;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    width: parent.width;
+                    font-family: "Segoe UI";
+                    text: time;
                     font-size: 18px;
                     font-weight: 700;
                     font-italic: true;
@@ -188,7 +201,7 @@ export component MainWindow inherits Window {
 
                 Image {
                     source: image;
-                    animate opacity { duration: 4000ms; easing: ease-in-out;}
+                    animate opacity { duration: 4000ms; easing: ease-in-bounce;}
                     width: 100px;
                     height: 100px;
                     horizontal-alignment: center;
@@ -280,7 +293,6 @@ export component MainWindow inherits Window {
                     y: parent.height -75px;
                     for model[index] in my_vector_data : HorizontalLayout {
                         spacing: -25px;
-
                         Image {
                             source: model.time_condition_icon;
                             width: 60px;

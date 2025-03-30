@@ -66,6 +66,7 @@ pub(crate) fn get_weather_for_time(forecast: &ForecastResponse) -> Vec<(String, 
     let forecast_vec = forecast.forecast.forecastday[1].hour.clone();
     let time_stamp_lenth = forecast_vec.len();
     let mut test: Vec<(String, String, String)> = vec![];
+    // for ho
     test.push((forecast_vec[0].time.clone(), forecast_vec[0].condition.code.to_string(), forecast_vec[0].temp_c.to_string()));
     test.push((forecast_vec[time_stamp_lenth/2].time.clone(), forecast_vec[time_stamp_lenth/2].condition.code.to_string(), forecast_vec[time_stamp_lenth/2].temp_c.to_string()));
     test.push((forecast_vec[time_stamp_lenth - 1].time.clone(), forecast_vec[time_stamp_lenth - 1].condition.code.to_string(), forecast_vec[time_stamp_lenth - 1].temp_c.to_string()));
