@@ -28,13 +28,26 @@ component CustomButton inherits Rectangle {
 }
 
 component Location inherits Rectangle {
+    height: 22px;
+    width: 210px;
+    border-radius: 8px;
+    x: 0px;
     in-out property <string> city;
     in-out property <color> box_color;
+    in-out property <color> text-color;
     in-out property <string> country;
     callback clicked <=> touch.clicked;
     background: touch.has-hover ? box_color.darker(0.5) : box_color;
     // property <string> name;
     location := Text {
+        height: 22px;
+        width: 210px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "Segoe UI";
+        color: text-color;
+        wrap: word-wrap;
+        horizontal-alignment: left;
         text: city + ", " + country;
     }
     touch := TouchArea {
@@ -128,14 +141,18 @@ export component MainWindow inherits Window {
             }
 
                         VerticalBox {
-                            ListView {
+                            y: 15px;
+                            list := ListView {
+                                viewport-height: 0px;
+                                visible: false;
                                 for data in possible_locations : Location {
                                         city: data.city;
                                         country: data.country;
                                         box_color: second_gradient_color;
+                                        text-color: text-color;
                                         clicked => {
                                             city_input.text = data.city;
-                                            // city_input.clear-focus();
+                                            list.visible = false;
                                         }
                                     }
                                 }
@@ -151,17 +168,6 @@ export component MainWindow inherits Window {
                 border-width: 1px;
                 background: rgba(255, 255, 255, 0.15);
             }
-            // autocompl := Rectangle {
-            //     height: 22px;
-            //     width: 210px;
-            //     border-radius: 8px;
-            //     x: 5px;
-            //     y: 5px;
-            //     border-color: city_input.has-focus ? second_gradient_color.with-alpha(0.8) : second_gradient_color.with-alpha(0.5);
-            //     border-width: 1px;
-            //     background: rgba(255, 255, 255, 0.15);
-            // }
-
 
             Text {
                 text: "🔎";
@@ -174,7 +180,7 @@ export component MainWindow inherits Window {
             }
 
             timer := Timer {
-                interval: 1s;
+                interval: 1ms;
                 running: true;
                 triggered() => {
                     city_input.count -= 1;
@@ -200,13 +206,15 @@ export component MainWindow inherits Window {
                     wrap: word-wrap;
                     horizontal-alignment: left;
                     accepted() => {
+                        list.visible = false;
                         city_input.clear-focus();
                         root.city_submitted(name);
                         test();
                     }
                     edited => {
                         timer.running = true;
-                        count = 3;
+                        list.visible = true;
+                        count = 380;
                     }
 
                 }

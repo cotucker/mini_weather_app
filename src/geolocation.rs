@@ -46,10 +46,10 @@ pub fn autocomplition (api_key: &str, city: &str) -> Result<Vec<PossibleLocation
         Err(_) => panic!("Не удалось получить геопозицию"),
     };
     let vec: Vec<PossibleLocation> = vec![
-        PossibleLocation {
-            name: "error".to_string(),
-            country: "error".to_string(),
-        }
+        // PossibleLocation {
+        //     name: "error".to_string(),
+        //     country: "error".to_string(),
+        // }
     ];
     let response = match response.json::<Vec<PossibleLocation>>(){
         Ok(response) => response,
