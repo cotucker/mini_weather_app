@@ -78,6 +78,7 @@ export component MainWindow inherits Window {
             background: @linear-gradient(180deg, first_gradient_color 0%, second_gradient_color 100%);
             animate background { duration: 4000ms; easing: ease-in-out;}
             border-radius: 8px;
+            border-color: rgba(200, 200, 200, 0.2);
 
             HorizontalLayout {
                 x: parent.width - 78px;
@@ -113,6 +114,25 @@ export component MainWindow inherits Window {
                 border-width: 1px;
                 background: rgba(255, 255, 255, 0.15);
             }
+
+
+                // ScrollView {
+                //     width: 200px;
+                //     height: 200px;
+                //     viewport-width: 300px;
+                //     viewport-height: 300px;
+                //     Image {
+                //         width: parent.viewport-width;
+                //         height: parent.viewport-height;
+                //         source: @image-url("icons/world.svg");
+                //         x: 0px;
+                //         y: 0px;
+                //     }
+                //     Rectangle { width: 30px; height: 30px; x: 275px; y: 50px; background: blue; }
+                //     Rectangle { width: 30px; height: 30px; x: 175px; y: 130px; background: red; }
+                //     Rectangle { width: 30px; height: 30px; x: 25px; y: 210px; background: yellow; }
+                //     Rectangle { width: 30px; height: 30px; x: 98px; y: 55px; background: orange; }
+                // }
 
             Text {
                 text: "🔎";

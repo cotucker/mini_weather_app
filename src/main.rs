@@ -64,6 +64,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 fn set_new_city(ui: &MainWindow, city: &str) {
     let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
     let forecast_responce = forecast::get_forecast(API_KEY, city.trim()).unwrap();
+    let poss_locations = geolocation::autocomplition(API_KEY, city.trim()).unwrap();
+    println!("{:?}", poss_locations);
     set_all_params(&weather_responce, &forecast_responce, ui);
 }
 
