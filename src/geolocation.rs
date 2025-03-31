@@ -9,10 +9,20 @@ struct Location {
 }
 
 #[derive(Deserialize, Debug)]
-struct PossibleLocation {
+pub(crate) struct PossibleLocation {
     name: String,
     country: String,
 }
+
+impl PossibleLocation  {
+    pub fn get_city(&self) -> String {
+        self.name.clone()
+    }
+    pub fn get_countru(&self) -> String {
+        self.country.clone()
+    }
+}
+
 
 pub fn get_location() -> Result<String, Error> {
     let response = match reqwest::blocking::get(format!("http://ip-api.com/json/")) {
@@ -30,7 +40,7 @@ pub fn get_location() -> Result<String, Error> {
     }
 }
 
-pub fn autocomplition (api_key: &str, city: &str) -> Result<Vec<String>, Error> {
+pub fn autocomplition (api_key: &str, city: &str) -> Result<Vec<PossibleLocation>, Error> {
     let response = match reqwest::blocking::get(format!("http://api.weatherapi.com/v1/search.json?key={}&q={}", api_key, city)) {
         Ok(response) => response,
         Err(_) => panic!("Не удалось получить геопозицию"),
@@ -45,8 +55,8 @@ pub fn autocomplition (api_key: &str, city: &str) -> Result<Vec<String>, Error> 
         Ok(response) => response,
         Err(_) => vec,
     };
-    let vec = response.iter().map(|s1| format!("{}, {}", s1.name, s1.country)).collect();
-    Ok(vec)
+    // let vec = response.iter().map(|s1| format!("{}, {}", s1.name, s1.country)).collect();
+    Ok(response)
 }
 
 

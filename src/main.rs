@@ -19,7 +19,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let ui = MainWindow::new().unwrap();
 
-    ui.window().set_position( slint::PhysicalPosition::new(0, 0));
+    ui.window().set_position(slint::PhysicalPosition::new(100,100));
+
     let ui_clone = ui.as_weak();
     ui.on_mouse_move(
             move |delta_x, delta_y| {
@@ -56,6 +57,14 @@ fn main() -> Result<(), Box<dyn Error>> {
             set_new_city(&ui_clone, &city.as_str());
         }
     );
+    let ui_clone = ui.as_weak();
+    ui.on_show_autocomplition(
+        move |city| {
+            let ui_clone = ui_clone.upgrade().unwrap();
+            set_autocomplete(&ui_clone, city.as_str());
+
+        }
+    );
     update_params(&ui);
     ui.run()?;
     Ok(())
@@ -64,9 +73,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 fn set_new_city(ui: &MainWindow, city: &str) {
     let weather_responce = weather::get_weather(API_KEY, city.trim()).unwrap();
     let forecast_responce = forecast::get_forecast(API_KEY, city.trim()).unwrap();
+    set_all_params(&weather_responce, &forecast_responce, ui);
+}
+
+fn set_autocomplete(ui: &MainWindow, city: &str) {
     let poss_locations = geolocation::autocomplition(API_KEY, city.trim()).unwrap();
     println!("{:?}", poss_locations);
-    set_all_params(&weather_responce, &forecast_responce, ui);
+    let slint_data_items: Vec<Region> = poss_locations
+       .into_iter()
+       .map(|s1| Region {
+           city: s1.get_city().into(),
+           country: s1.get_countru().into(),
+        }).collect();
+        let new_model = Rc::new(VecModel::from(slint_data_items));
+        ui.set_possible_locations(new_model.into());
+
 }
 
 fn split_date_time(date_time: &String) -> (String, String) {

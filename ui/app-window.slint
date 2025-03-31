@@ -1,9 +1,14 @@
-import { VerticalBox, Button, TextEdit, ScrollView, TextEdit} from "std-widgets.slint";
+import { VerticalBox, Button, TextEdit, ScrollView, ListView, TextEdit} from "std-widgets.slint";
 
 struct WeatherForTime {
     time: string,
     time_condition_icon: image,
     temperature: string
+}
+
+struct Region {
+    city: string,
+    country: string
 }
 
 
@@ -17,6 +22,21 @@ component CustomButton inherits Rectangle {
     border-width: 1.4px;
     background: buton_color;
     padding: 0px;
+    touch := TouchArea {
+        mouse-cursor: pointer;
+    }
+}
+
+component Location inherits Rectangle {
+    in-out property <string> city;
+    in-out property <color> box_color;
+    in-out property <string> country;
+    callback clicked <=> touch.clicked;
+    background: touch.has-hover ? box_color.darker(0.5) : box_color;
+    // property <string> name;
+    location := Text {
+        text: city + ", " + country;
+    }
     touch := TouchArea {
         mouse-cursor: pointer;
     }
@@ -46,6 +66,7 @@ export component MainWindow inherits Window {
     in property <string> feels_like_c;
 
     in property <[WeatherForTime]> my_vector_data: [];
+    in property <[Region]> possible_locations: [];
 
     callback mouse_move(length, length);
     callback close_window();
@@ -53,6 +74,7 @@ export component MainWindow inherits Window {
     callback window_minimize();
     callback city_submitted(string);
     callback set_inputtext_text(string);
+    callback show_autocomplition(string);
 
 
     function test() -> string{
@@ -104,6 +126,21 @@ export component MainWindow inherits Window {
                     }
                 }
             }
+
+                        VerticalBox {
+                            ListView {
+                                for data in possible_locations : Location {
+                                        city: data.city;
+                                        country: data.country;
+                                        box_color: second_gradient_color;
+                                        clicked => {
+                                            city_input.text = data.city;
+                                            // city_input.clear-focus();
+                                        }
+                                    }
+                                }
+                            }
+
             searchbox := Rectangle {
                 height: 22px;
                 width: 210px;
@@ -114,25 +151,17 @@ export component MainWindow inherits Window {
                 border-width: 1px;
                 background: rgba(255, 255, 255, 0.15);
             }
+            // autocompl := Rectangle {
+            //     height: 22px;
+            //     width: 210px;
+            //     border-radius: 8px;
+            //     x: 5px;
+            //     y: 5px;
+            //     border-color: city_input.has-focus ? second_gradient_color.with-alpha(0.8) : second_gradient_color.with-alpha(0.5);
+            //     border-width: 1px;
+            //     background: rgba(255, 255, 255, 0.15);
+            // }
 
-
-                // ScrollView {
-                //     width: 200px;
-                //     height: 200px;
-                //     viewport-width: 300px;
-                //     viewport-height: 300px;
-                //     Image {
-                //         width: parent.viewport-width;
-                //         height: parent.viewport-height;
-                //         source: @image-url("icons/world.svg");
-                //         x: 0px;
-                //         y: 0px;
-                //     }
-                //     Rectangle { width: 30px; height: 30px; x: 275px; y: 50px; background: blue; }
-                //     Rectangle { width: 30px; height: 30px; x: 175px; y: 130px; background: red; }
-                //     Rectangle { width: 30px; height: 30px; x: 25px; y: 210px; background: yellow; }
-                //     Rectangle { width: 30px; height: 30px; x: 98px; y: 55px; background: orange; }
-                // }
 
             Text {
                 text: "🔎";
@@ -144,6 +173,18 @@ export component MainWindow inherits Window {
                 color: text-color;
             }
 
+            timer := Timer {
+                interval: 1s;
+                running: true;
+                triggered() => {
+                    city_input.count -= 1;
+                    if (city_input.count == 0) {
+                        self.running = false;
+                        root.show_autocomplition(city_input.text);
+                    }
+                }
+            }
+
 
                 city_input := TextInput {
                     x: 35px;
@@ -151,6 +192,7 @@ export component MainWindow inherits Window {
                     width: parent.width * 0.6;
                     height: 22px;
                     in-out property <string> name : city_input.text;
+                    in-out property <int> count;
                     font-size: 14px;
                     font-weight: 600;
                     font-family: "Segoe UI";
@@ -161,6 +203,10 @@ export component MainWindow inherits Window {
                         city_input.clear-focus();
                         root.city_submitted(name);
                         test();
+                    }
+                    edited => {
+                        timer.running = true;
+                        count = 3;
                     }
 
                 }
